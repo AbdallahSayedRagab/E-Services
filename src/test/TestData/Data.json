@@ -1,0 +1,62 @@
+{
+  "//===== المسؤول (اللوجين + التقويم + الهيكل التنظيمي) =====": "",
+  "AdminUser": "abdallasayed46@gmail.com",
+  "AdminPassword": "P@$$w0rd",
+  "AdminName": "Abdalla Sayed",
+
+  "//===== التقويم الوطني =====": "",
+  "CalendarYear": "2026",
+  "CalendarUnitName": "وحدة اوتوميشن",
+  "CalendarUnitNameEn": "Automation Unit",
+  "CalendarUnitType": "موسم",
+
+  "//===== مكتب إدارة الموسم (بيعمل طلب الميزانية وطلب التعزيز) =====": "",
+  "SeasonOfficeEmail": "SeasonManagmentOoffice@proton.me",
+  "SeasonOfficePassword": "SeasonManagmentOoffice@123",
+  "SeasonOfficeUserName": "SeasonManagmentOoffice",
+  "SeasonOfficeRole": "مكتب إدارة الموسم",
+  "SeasonOfficeNameAr": "مكتب ادارة الموسم",
+  "SeasonOfficeNameEn": "Season management office",
+
+  "//===== مدير وحدة التقويم (أول معتمد) =====": "",
+  "UnitManagerEmail": "UnitMmanager@proton.me",
+  "UnitManagerPassword": "UnitMmanager@123",
+  "UnitManagerUserName": "UnitMmanager",
+  "UnitManagerRole": "مدير وحدة التقويم",
+  "UnitManagerNameAr": "مدير وحدة الموسم",
+  "UnitManagerNameEn": "Unit manager",
+
+  "//===== مختص الميزانية والتخطيط (تاني معتمد: تعيين الطلب لي ثم إعتماد) =====": "",
+  "BudgetEmployeeEmail": "BudgetEempolyee@proton.me",
+  "BudgetEmployeePassword": "BudgetEempolyee@123",
+  "BudgetEmployeeUserName": "BudgetEempolyee",
+  "BudgetEmployeeRole": "مختص الميزانية والتخطيط",
+  "BudgetEmployeeNameAr": "موظف ميزانية",
+  "BudgetEmployeeNameEn": "Budget employee",
+
+  "//===== مدير عام الميزانية والتقارير المالية (تالت معتمد) =====": "",
+  "BudgetManagerEmail": "BudgetMmanager@proton.me",
+  "BudgetManagerPassword": "BudgetMmanager@123",
+  "BudgetManagerUserName": "BudgetMmanager",
+  "BudgetManagerRole": "مدير عام الميزانية والتقارير المالية",
+  "BudgetManagerNameAr": "مدير عام ميزانية",
+  "BudgetManagerNameEn": "Budget general manager",
+
+  "//===== المدير العام (آخر معتمد، مش في الهيكل التنظيمي) =====": "",
+  "BudgetGeneralManagerEmail": "budgetgeneralmanager@test.com",
+  "BudgetGeneralManagerPassword": "P@ssw0rd",
+
+  "//===== طلب الميزانية =====": "",
+  "BudgetTotal": "1500000",
+  "BudgetNewItemNameAr": "بند اختبار",
+  "BudgetNewItemNameEn": "Test item",
+  "BudgetDetails": "تفاصيل ميزانية اوتوميشن",
+
+  "//===== طلب التعزيز (بيعزز البند اللي فوق BudgetNewItemNameAr) =====": "",
+  "SupplementAmount": "100000",
+  "SupplementJustification": "مبررات تعزيز اوتوميشن",
+
+  "//===== مشترك بين الميزانية والتعزيز =====": "",
+  "AttachmentFile": "Test_Photo.jpg",
+  "ApprovalNotes": "تم الاعتماد من الاوتوميشن"
+}

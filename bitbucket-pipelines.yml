@@ -1,0 +1,17 @@
+image: markhobson/maven-chrome:jdk-17
+
+pipelines:
+  custom:
+    # يدوي عشان الرن بيعمل داتا على السيرفر
+    run-smoke:
+      - step:
+          name: Smoke Tests
+          max-time: 60
+          caches:
+            - maven
+          script:
+            - mvn clean test -Dsuite=testng-smoke.xml -Dheadless=true
+          artifacts:
+            - target/surefire-reports/**
+            - src/main/java/Shots/**
+            - test-outputs/**
