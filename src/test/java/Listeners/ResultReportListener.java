@@ -241,7 +241,8 @@ public class ResultReportListener implements ISuiteListener {
     private static final String[][] RUN_DATA = {
             {"LastCalendarUnitName", "وحدة التقويم", "Calendar unit"},
             {"LastBudgetRequestNumber", "رقم طلب الميزانية", "Budget request no."},
-            {"LastSupplementRequestNumber", "رقم طلب التعزيز", "Supplement request no."}};
+            {"LastSupplementRequestNumber", "رقم طلب التعزيز", "Supplement request no."},
+            {"LastTransferRequestNumber", "رقم طلب المناقلة", "Transfer request no."}};
 
     // JsonUtil بيكتب في اللوج "Saved key = value" لما يحفظ و"Read key = value" لما يقرا، فمنهم بنعرف كل كيس عمل/استخدم إيه
     private static final Pattern SAVED = Pattern.compile("^Saved (\\w+) = (.*) in runtime\\.json$");

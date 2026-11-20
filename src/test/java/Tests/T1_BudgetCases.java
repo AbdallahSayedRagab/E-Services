@@ -82,7 +82,7 @@ import static DriverFactory.DriverFactoryClass.getdriver;
 
 
         // ===== الهيكل التنظيمي =====
-        // بيضيف اليوزرز بالترتيب تحت آخر وحدة تقويم اتعملت
+        // بيضيف اليوزرز بالترتيب تحت آخر وحدة تقويم اتعملت، وبعدهم قائد الموسم
         @Test(priority = 3, description = "إضافة المستخدمين إلى الهيكل التنظيمي لآخر وحدة")
         public void AddUsersToOrgStructureOfLastUnit () throws InterruptedException {
             String[] Users = {"SeasonOffice", "UnitManager", "BudgetEmployee", "BudgetManager"};
@@ -96,8 +96,14 @@ import static DriverFactory.DriverFactoryClass.getdriver;
                 OrgStructure.AddUserToUnit(DataUtiles.getJsonData("Data",User + "NameAr"), DataUtiles.getJsonData("Data",User + "NameEn")
                         ,DataUtiles.getJsonData("Data",User + "Role"), DataUtiles.getJsonData("Data",User + "UserName"));
             }
+            // قائد الموسم بيعتمد المناقلة بعد مدير الموسم، ومن غير صلاحيات اعتماد لأن مدير الوحدة خدها كلها
+            // (كل صلاحية بتتمنح لدور واحد بس في الموسم)
+            OrgStructure.AddUserToUnit(DataUtiles.getJsonData("Data","SeasonLeaderNameAr"), DataUtiles.getJsonData("Data","SeasonLeaderNameEn")
+                    ,DataUtiles.getJsonData("Data","SeasonLeaderRole"), DataUtiles.getJsonData("Data","SeasonLeaderUserName"), false);
             OrgStructure.SaveOrgStructure();
 
+            Validations.ValidationTrue(OrgStructure.IsNodeDisplayed(DataUtiles.getJsonData("Data","SeasonLeaderNameAr"))
+                    , "SeasonLeader is not displayed in the org structure");
             for (String User : Users)
                 Validations.ValidationTrue(OrgStructure.IsNodeDisplayed(DataUtiles.getJsonData("Data",User + "NameAr"))
                         , User + " is not displayed in the org structure");
@@ -199,6 +205,76 @@ import static DriverFactory.DriverFactoryClass.getdriver;
         public void BudgetGeneralManagerApprovesLastSupplementRequest () throws InterruptedException {
             boolean Approved = OpenLastTaskAs("BudgetGeneralManager", "LastSupplementRequestNumber").ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
             Validations.ValidationTrue(Approved, "Budget general manager couldn't approve the supplement request");
+        }
+
+
+        // ===== طلب المناقلة =====
+        // مكتب إدارة الموسم بينقل مبلغ من البند اللي ضافه بإيده لأول بند في القايمة (بعد التعزيز، والميزانية لازم تكون اتعتمدت قبله)
+        @Test(priority = 14, description = "إنشاء طلب مناقلة من بند الاختبار وإرساله")
+        public void CreateAndSendTransferRequestOfLastUnit () throws InterruptedException {
+            String AttachmentPath = System.getProperty("user.dir") + "/src/test/TestData/" + DataUtiles.getJsonData("Data","AttachmentFile");
+
+            boolean Sent = new P1_LoginPage(driver).Login_As_Admin(DataUtiles.getJsonData("Data","SeasonOfficeEmail")
+                            ,DataUtiles.getJsonData("Data","SeasonOfficePassword"))
+                    .Open_EServices().Select_TransferRequestsPage()
+                    .FilterByCalendarUnit(DataUtiles.getJsonData("Data","CalendarYear"), JsonUtil.readValue("LastCalendarUnitName"))
+                    .CreateTransferRequest(DataUtiles.getJsonData("Data","BudgetNewItemNameAr")
+                            ,Long.parseLong(DataUtiles.getJsonData("Data","TransferAmount"))
+                            ,DataUtiles.getJsonData("Data","TransferJustification"), AttachmentPath)
+                    .SaveAsDraft()
+                    .SendRequest();
+
+            Validations.ValidationTrue(Sent, "Transfer request " + JsonUtil.readValue("LastTransferRequestNumber") + " was not sent");
+        }
+
+
+        // ===== اعتمادات طلب المناقلة: مدير الموسم ← قائد الموسم ← مختص الميزانية ← مدير الميزانية ← مدير عام الميزانية ← الرئيس التنفيذي للمالية ← مدير عام المركز =====
+        // مدير وحدة التقويم هو اللي بيعمل دور مدير الموسم في المناقلة
+        @Test(priority = 15, description = "اعتماد مدير الموسم لطلب المناقلة")
+        public void UnitManagerApprovesLastTransferRequest () throws InterruptedException {
+            boolean Approved = OpenLastTaskAs("UnitManager", "LastTransferRequestNumber").ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
+            Validations.ValidationTrue(Approved, "Unit manager couldn't approve the transfer request");
+        }
+
+        // المهمة بتروحله عشان قائد الموسم موجود في الهيكل التنظيمي (لو مش موجود بتعدي على مختص الميزانية على طول)
+        @Test(priority = 16, description = "اعتماد قائد الموسم لطلب المناقلة")
+        public void SeasonLeaderApprovesLastTransferRequest () throws InterruptedException {
+            boolean Approved = OpenLastTaskAs("SeasonLeader", "LastTransferRequestNumber").ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
+            Validations.ValidationTrue(Approved, "Season leader couldn't approve the transfer request");
+        }
+
+        // مختص الميزانية: يعيّن الطلب لنفسه ويفتحه تاني ويعتمد
+        @Test(priority = 17, description = "اعتماد مختص الميزانية لطلب المناقلة")
+        public void BudgetEmployeeApprovesLastTransferRequest () throws InterruptedException {
+            OpenLastTaskAs("BudgetEmployee", "LastTransferRequestNumber").AssignTaskToMe();
+            boolean Approved = new P6_HomePage(driver).OpenTask(JsonUtil.readValue("LastTransferRequestNumber"))
+                    .ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
+            Validations.ValidationTrue(Approved, "Budget employee couldn't approve the transfer request");
+        }
+
+        @Test(priority = 18, description = "اعتماد مدير الميزانية لطلب المناقلة")
+        public void BudgetManagerApprovesLastTransferRequest () throws InterruptedException {
+            boolean Approved = OpenLastTaskAs("BudgetManager", "LastTransferRequestNumber").ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
+            Validations.ValidationTrue(Approved, "Budget manager couldn't approve the transfer request");
+        }
+
+        @Test(priority = 19, description = "اعتماد مدير عام الميزانية لطلب المناقلة")
+        public void BudgetGeneralManagerApprovesLastTransferRequest () throws InterruptedException {
+            boolean Approved = OpenLastTaskAs("BudgetGeneralManager", "LastTransferRequestNumber").ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
+            Validations.ValidationTrue(Approved, "Budget general manager couldn't approve the transfer request");
+        }
+
+        @Test(priority = 20, description = "اعتماد الرئيس التنفيذي للمالية لطلب المناقلة")
+        public void CFOApprovesLastTransferRequest () throws InterruptedException {
+            boolean Approved = OpenLastTaskAs("CFO", "LastTransferRequestNumber").ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
+            Validations.ValidationTrue(Approved, "CFO couldn't approve the transfer request");
+        }
+
+        // آخر اعتماد: بعده المناقلة بتتنفذ على البنود
+        @Test(priority = 21, description = "اعتماد مدير عام المركز لطلب المناقلة")
+        public void CenterManagerApprovesLastTransferRequest () throws InterruptedException {
+            boolean Approved = OpenLastTaskAs("CenterManager", "LastTransferRequestNumber").ApproveTask(DataUtiles.getJsonData("Data","ApprovalNotes"));
+            Validations.ValidationTrue(Approved, "Center manager couldn't approve the transfer request");
         }
 
 

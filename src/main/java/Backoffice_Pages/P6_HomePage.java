@@ -23,8 +23,8 @@ public class P6_HomePage {
     private final By MyTasksRows = By.xpath("//app-task-list//tbody/tr[contains(@class,'clickable')]");
     private final By MyTasksNextPage = By.xpath("//app-task-list//button[contains(@class,'p-paginator-next')]");
 
-    // أزرار المهمة جوه app-budget-request-tasks أو app-supplement-request-tasks (اعتماد / تعيين الطلب لي هو الـ btn-primary في actions)
-    private final By TaskMainAction = By.xpath("//*[self::app-budget-request-tasks or self::app-supplement-request-tasks]//div[contains(@class,'actions')]/button[contains(@class,'btn-primary')]");
+    // أزرار المهمة جوه app-{budget|supplement|transfer}-request-tasks (اعتماد / تعيين الطلب لي هو الـ btn-primary في actions)
+    private final By TaskMainAction = By.xpath("//*[contains(local-name(),'-request-tasks')]//div[contains(@class,'actions')]/button[contains(@class,'btn-primary')]");
     private final By TaskNotes = By.id("notes");
     private final By TaskConfirmButton = By.xpath("//app-task-confirmation-dialog//div[contains(@class,'p-dialog-footer')]//button[contains(@class,'btn-primary')]");
     private final By SuccessToast = By.cssSelector(".p-toast-message-success");

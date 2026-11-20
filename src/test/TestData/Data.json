@@ -46,6 +46,22 @@
   "BudgetGeneralManagerEmail": "budgetgeneralmanager@test.com",
   "BudgetGeneralManagerPassword": "P@ssw0rd",
 
+  "//===== قائد الموسم (في الهيكل التنظيمي، المناقلة: بعد مدير الموسم) =====": "",
+  "SeasonLeaderEmail": "seasonleader@test.com",
+  "SeasonLeaderPassword": "P@ssw0rd",
+  "SeasonLeaderUserName": "season leader",
+  "SeasonLeaderRole": "قائد الموسم",
+  "SeasonLeaderNameAr": "قائد الموسم",
+  "SeasonLeaderNameEn": "Season leader",
+
+  "//===== الرئيس التنفيذي للمالية (مش في الهيكل، المناقلة: بعد مدير عام الميزانية) =====": "",
+  "CFOEmail": "financailchef@test.com",
+  "CFOPassword": "P@ssw0rd",
+
+  "//===== مدير عام المركز (مش في الهيكل، المناقلة: آخر معتمد) =====": "",
+  "CenterManagerEmail": "centermanager@test.com",
+  "CenterManagerPassword": "P@ssw0rd",
+
   "//===== طلب الميزانية =====": "",
   "BudgetTotal": "1500000",
   "BudgetNewItemNameAr": "بند اختبار",
@@ -56,7 +72,11 @@
   "SupplementAmount": "100000",
   "SupplementJustification": "مبررات تعزيز اوتوميشن",
 
-  "//===== مشترك بين الميزانية والتعزيز =====": "",
+  "//===== طلب المناقلة (من البند اللي فوق BudgetNewItemNameAr لأول بند في قايمة المنقول إليه) =====": "",
+  "TransferAmount": "100000",
+  "TransferJustification": "مبررات مناقلة اوتوميشن",
+
+  "//===== مشترك بين الميزانية والتعزيز والمناقلة =====": "",
   "AttachmentFile": "Test_Photo.jpg",
   "ApprovalNotes": "تم الاعتماد من الاوتوميشن"
 }

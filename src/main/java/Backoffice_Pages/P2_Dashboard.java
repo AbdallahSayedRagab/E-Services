@@ -30,6 +30,8 @@ public class P2_Dashboard {
     private final By BudgetsPageButton = By.xpath("//a[@href='/#/v2/budget/event-budget-requests/budget-request']");
     // طلبات التعزيز في نفس قايمة الميزانية والتخطيط
     private final By SupplementRequestsPageButton = By.xpath("//a[@href='/#/v2/budget/supplement-requests/list']");
+    // وطلبات المناقلة كمان
+    private final By TransferRequestsPageButton = By.xpath("//a[@href='/#/v2/budget/transfer-requests/list']");
 
 
     public String GetLoggedInUserName () {
@@ -63,6 +65,11 @@ public class P2_Dashboard {
     public P7_SupplementRequestsPage Select_SupplementRequestsPage () {
         Utility.OPEN_MENU_AND_CLICK(driver,BudgetAndPlanning_FSM,SupplementRequestsPageButton);
         return new P7_SupplementRequestsPage(driver);
+    }
+
+    public P8_TransferRequestsPage Select_TransferRequestsPage () {
+        Utility.OPEN_MENU_AND_CLICK(driver,BudgetAndPlanning_FSM,TransferRequestsPageButton);
+        return new P8_TransferRequestsPage(driver);
     }
 
     // الخدمات الإلكترونية بتفتح على الرئيسية أصلاً، فالصفحة دي هي اللي فيها مهامي

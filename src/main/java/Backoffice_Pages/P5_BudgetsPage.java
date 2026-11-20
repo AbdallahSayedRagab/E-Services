@@ -40,7 +40,8 @@ public class P5_BudgetsPage {
     private final By SaveItemButton = By.xpath("//div[contains(@class,'p-dialog')]//div[contains(@class,'dialog-footer')]//button[contains(@class,'btn-black')]");
     private final By BudgetDetailsField = By.id("Justification");
     // المرفقات الإجبارية: كل مرفق ليه زرار + (label for=attach-modal-N) ونافذة رفع خاصة بيه
-    private final By RequiredAttachmentButtons = By.xpath("//div[contains(@class,'required-attachment-box')]//label[contains(@class,'btn-primary')][starts-with(@for,'attach-modal-')]");
+    // المرفق اللي متملي بالفعل (زي المناقلة بتاخد مرفقات الميزانية) عليه علامة صح خضرا (code-green) فبنسيبه
+    private final By RequiredAttachmentButtons = By.xpath("//div[contains(@class,'required-attachment-box')]//div[contains(@class,'attachment-header')][not(.//img[contains(@class,'code-green')])]//label[contains(@class,'btn-primary')][starts-with(@for,'attach-modal-')]");
     private final By SaveAsDraftButton = By.xpath("//button[contains(@class,'btn-black')][not(contains(@class,'small'))][not(ancestor::div[contains(@class,'p-dialog')])]");
     private final By SuccessToast = By.cssSelector(".p-toast-message-success");
     private final By ErrorToast = By.cssSelector(".p-toast-message-error");

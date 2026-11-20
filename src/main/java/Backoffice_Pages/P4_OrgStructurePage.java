@@ -45,6 +45,7 @@ public class P4_OrgStructurePage {
     // رسالة "هل تريد حفظ الهيكل التنظيمي؟": نعم ليها class ثابت في PrimeNG
     private final By ConfirmYesButton = By.cssSelector(".p-confirm-dialog-accept");
     private final By SuccessToast = By.cssSelector(".p-toast-message-success");
+    private final By ErrorToast = By.cssSelector(".p-toast-message-error");
 
     // الاختيار من الليست بالاسم اللي جاي من الجيسون (التقويم بالسنة، الوحدة باسمها، الدور باسمه)
     private By DropdownOptionContains (String Text) {
@@ -66,6 +67,12 @@ public class P4_OrgStructurePage {
 
     // بيضيف يوزر كوحدة تنظيمية تحت الوحدة: الاسم عربي وانجليزي + مستخدم بالنظام + الدور + اسم المسؤول
     public P4_OrgStructurePage AddUserToUnit (String NameAr , String NameEn , String Role , String UserName) {
+        return AddUserToUnit(NameAr, NameEn, Role, UserName, true);
+    }
+
+    // كل صلاحية اعتماد بتتمنح لدور واحد بس في الموسم ("نوع الطلب ممنوح بالفعل لـ ...")
+    // فاليوزر اللي بييجي بعد ما الصلاحيات اتاخدت (قائد الموسم) بيتضاف من غيرها، والحقل مش إجباري
+    public P4_OrgStructurePage AddUserToUnit (String NameAr , String NameEn , String Role , String UserName , boolean WithApprovalPermissions) {
         Utility.WatingLoader_And_CLICKONELEMENTS(driver,RootNodeAddButton);
         Utility.SENDKEYS(driver,NodeNameAr,NameAr);
         Utility.SENDKEYS(driver,NodeNameEn,NameEn);
@@ -75,11 +82,16 @@ public class P4_OrgStructurePage {
         Utility.WatingLoader_And_CLICKONELEMENTS(driver,ResponsibleDropdown);
         Utility.SENDKEYS(driver,DropdownSearchField,UserName);
         Utility.WatingLoader_And_CLICKONELEMENTS(driver,FirstDropdownOption);
-        SelectAllApprovalPermissionsIfExist();
+        if (WithApprovalPermissions) SelectAllApprovalPermissionsIfExist();
         Utility.WatingLoader_And_CLICKONELEMENTS(driver,SaveNodeButton);
-        // بنستنى "تم حفظ الوحدة التنظيمية بنجاح" قبل ما نضيف اللي بعده
-        new WebDriverWait(driver, Duration.ofSeconds(30)).until(ExpectedConditions.visibilityOfElementLocated(SuccessToast));
-        new WebDriverWait(driver, Duration.ofSeconds(30)).until(ExpectedConditions.invisibilityOfElementLocated(SuccessToast));
+        // الحفظ نجح لما رسالة النجاح تظهر أو الوحدة تظهر في الشجرة (الرسالة ممكن تختفي وإحنا مستنيين اللودر،
+        // والفورم مبيتقفلش بعد الحفظ، بيفضل مفتوح على الوحدة اللي اتحفظت ومعاه زرار حذف)
+        // ولو ظهرت رسالة خطأ (اسم متكرر / صلاحية ممنوحة لدور تاني) بنفشل بيها على طول
+        new WebDriverWait(driver, Duration.ofSeconds(30)).until(ExpectedConditions.or(
+                ExpectedConditions.visibilityOfElementLocated(SuccessToast), ExpectedConditions.presenceOfElementLocated(NodeByName(NameAr)),
+                ExpectedConditions.visibilityOfElementLocated(ErrorToast)));
+        if (!driver.findElements(ErrorToast).isEmpty())
+            throw new AssertionError("Adding " + NameAr + " failed: " + driver.findElement(ErrorToast).getText());
         LogsUtiles.info("Org unit added: " + NameAr + " / " + UserName);
         return this;
     }
